@@ -1,0 +1,63 @@
+name: CI
+on: push
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Run tests
+        run: cargo test
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+          override: true
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Run Clippy
+        run: cargo clippy --no-deps -- -D warnings
+
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt
+          override: true
+
+      - name: Run rustfmt
+        run: cargo fmt --all -- --check
