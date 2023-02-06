@@ -165,7 +165,8 @@ where
     }
 
     pub fn remove(self) {
-        self.replace([])
+        self.stride.set(0);
+        self.list.remove(self.index);
     }
 }
 
