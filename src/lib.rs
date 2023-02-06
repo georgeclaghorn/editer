@@ -30,7 +30,19 @@ pub trait List<Item> {
     fn get(&self, index: usize) -> &Item;
     fn get_mut(&mut self, index: usize) -> &mut Item;
     fn insert(&mut self, index: usize, item: Item);
-    fn splice(&mut self, index: usize, items: impl Iterator<Item = Item>);
+    fn remove(&mut self, index: usize);
+
+    fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Item>) {
+        if let Some(item) = items.next() {
+            *self.get_mut(index) = item;
+
+            for (offset, item) in items.enumerate() {
+                self.insert(index + offset + 1, item);
+            }
+        } else {
+            self.remove(index);
+        }
+    }
 }
 
 struct Iteration<'a, List, Item>

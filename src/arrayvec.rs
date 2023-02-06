@@ -20,16 +20,8 @@ impl<Item, const CAP: usize> List<Item> for ArrayVec<Item, CAP> {
         ArrayVec::insert(self, index, item)
     }
 
-    fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Item>) {
-        if let Some(item) = items.next() {
-            self[index] = item;
-
-            for (offset, item) in items.enumerate() {
-                self.insert(index + offset + 1, item);
-            }
-        } else {
-            self.remove(index);
-        }
+    fn remove(&mut self, index: usize) {
+        ArrayVec::remove(self, index);
     }
 }
 

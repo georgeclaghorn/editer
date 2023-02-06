@@ -22,6 +22,10 @@ impl<Item> List<Item> for Vec<Item> {
         Vec::insert(self, index, item);
     }
 
+    fn remove(&mut self, index: usize) {
+        Vec::remove(self, index);
+    }
+
     fn splice(&mut self, index: usize, items: impl Iterator<Item = Item>) {
         Vec::splice(self, index..index + 1, items);
     }
