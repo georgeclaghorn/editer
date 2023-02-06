@@ -32,12 +32,25 @@ mod tests {
     use crate::Edit;
 
     #[test]
-    fn replacing_an_item_with_one() {
+    fn replacing_the_first_item_with_one() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|mut item| {
+            if *item == 1 {
+                *item = 6;
+            }
+        });
+
+        assert_eq!(items, vec![6, 2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn replacing_an_interior_item_with_one() {
         let mut items = vec![1, 2, 3, 4, 5];
 
         items.edit(|mut item| {
             if *item == 3 {
-                *item = 6
+                *item = 6;
             }
         });
 
@@ -45,7 +58,33 @@ mod tests {
     }
 
     #[test]
-    fn replacing_an_item_with_many() {
+    fn replacing_the_last_item_with_one() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|mut item| {
+            if *item == 5 {
+                *item = 6;
+            }
+        });
+
+        assert_eq!(items, vec![1, 2, 3, 4, 6]);
+    }
+
+    #[test]
+    fn replacing_the_first_item_with_many() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 1 {
+                item.replace([6, 7, 8]);
+            }
+        });
+
+        assert_eq!(items, vec![6, 7, 8, 2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn replacing_an_interior_item_with_many() {
         let mut items = vec![1, 2, 3, 4, 5];
 
         items.edit(|item| {
@@ -58,7 +97,33 @@ mod tests {
     }
 
     #[test]
-    fn removing_an_item() {
+    fn replacing_the_last_item_with_many() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 5 {
+                item.replace([6, 7, 8]);
+            }
+        });
+
+        assert_eq!(items, vec![1, 2, 3, 4, 6, 7, 8]);
+    }
+
+    #[test]
+    fn removing_the_first_item() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 1 {
+                item.remove();
+            }
+        });
+
+        assert_eq!(items, vec![2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn removing_an_interior_item() {
         let mut items = vec![1, 2, 3, 4, 5];
 
         items.edit(|item| {
@@ -71,7 +136,33 @@ mod tests {
     }
 
     #[test]
-    fn inserting_an_item_before() {
+    fn removing_the_last_item() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 5 {
+                item.remove();
+            }
+        });
+
+        assert_eq!(items, vec![1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn inserting_an_item_before_the_first_item() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 1 {
+                item.insert_before(6);
+            }
+        });
+
+        assert_eq!(items, vec![6, 1, 2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn inserting_an_item_before_an_interior_item() {
         let mut items = vec![1, 2, 3, 4, 5];
 
         items.edit(|item| {
@@ -84,7 +175,33 @@ mod tests {
     }
 
     #[test]
-    fn inserting_an_item_after() {
+    fn inserting_an_item_before_the_last_item() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 5 {
+                item.insert_before(6);
+            }
+        });
+
+        assert_eq!(items, vec![1, 2, 3, 4, 6, 5]);
+    }
+
+    #[test]
+    fn inserting_an_item_after_the_first_item() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 1 {
+                item.insert_after(6);
+            }
+        });
+
+        assert_eq!(items, vec![1, 6, 2, 3, 4, 5]);
+    }
+
+    #[test]
+    fn inserting_an_item_after_an_interior_item() {
         let mut items = vec![1, 2, 3, 4, 5];
 
         items.edit(|item| {
@@ -94,5 +211,18 @@ mod tests {
         });
 
         assert_eq!(items, vec![1, 2, 3, 6, 4, 5]);
+    }
+
+    #[test]
+    fn inserting_an_item_after_the_last_item() {
+        let mut items = vec![1, 2, 3, 4, 5];
+
+        items.edit(|item| {
+            if *item == 5 {
+                item.insert_after(6);
+            }
+        });
+
+        assert_eq!(items, vec![1, 2, 3, 4, 5, 6]);
     }
 }
