@@ -5,7 +5,7 @@ impl<Item, const CAP: usize> Edit<Item> for ArrayVec<Item, CAP> {}
 
 impl<Item, const CAP: usize> List<Item> for ArrayVec<Item, CAP> {
     fn len(&self) -> usize {
-        self.len()
+        ArrayVec::len(self)
     }
 
     fn get(&self, index: usize) -> &Item {

@@ -6,6 +6,9 @@ mod alloc;
 #[cfg(feature = "arrayvec")]
 mod arrayvec;
 
+#[cfg(feature = "smallvec")]
+mod smallvec;
+
 use core::{
     marker::PhantomData,
     ops::{Deref, DerefMut},

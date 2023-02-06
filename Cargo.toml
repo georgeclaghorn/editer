@@ -5,10 +5,12 @@ edition = "2021"
 
 [dependencies]
 arrayvec = { version = "0.7", optional = true, default-features = false }
+smallvec = { version = "1.10", optional = true }
 
 [dev-dependencies]
-editer = { path = ".", features = ["arrayvec"] }
+editer = { path = ".", features = ["arrayvec", "smallvec"] }
 arrayvec = "0.7"
+smallvec = "1.10"
 
 [features]
 default = ["alloc", "std"]
