@@ -13,6 +13,7 @@ use core::{
     marker::PhantomData,
     ops::{Deref, DerefMut},
 };
+use tap::TapFallible;
 
 pub trait Edit<Item>: List<Item> + Sized {
     fn edit(&mut self, mut edit: impl FnMut(Slot<Self, Item>)) {
@@ -21,6 +22,19 @@ pub trait Edit<Item>: List<Item> + Sized {
         while index < self.len() {
             Iteration::new(self, &mut index).perform(&mut edit);
         }
+    }
+
+    fn try_edit<Error>(
+        &mut self,
+        mut edit: impl FnMut(Slot<Self, Item>) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        let mut index = 0;
+
+        while index < self.len() {
+            Iteration::new(self, &mut index).try_perform(&mut edit)?;
+        }
+
+        Ok(())
     }
 }
 
@@ -73,7 +87,14 @@ where
         self.advance();
     }
 
-    fn apply(&mut self, edit: &mut impl FnMut(Slot<List, Item>)) {
+    fn try_perform<Error>(
+        mut self,
+        edit: &mut impl FnMut(Slot<List, Item>) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        self.apply(edit).tap_ok(|_| self.advance())
+    }
+
+    fn apply<Output>(&mut self, edit: &mut impl FnMut(Slot<List, Item>) -> Output) -> Output {
         edit(Slot::new(self.list, *self.index, &mut self.stride))
     }
 
