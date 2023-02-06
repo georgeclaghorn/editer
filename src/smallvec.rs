@@ -1,22 +1,24 @@
 use crate::{Edit, List};
 use smallvec::SmallVec;
 
-impl<Item, Array: smallvec::Array<Item = Item>> Edit<Item> for SmallVec<Array> {}
+impl<Array: smallvec::Array> Edit for SmallVec<Array> {}
 
-impl<Item, Array: smallvec::Array<Item = Item>> List<Item> for SmallVec<Array> {
+impl<Array: smallvec::Array> List for SmallVec<Array> {
+    type Item = Array::Item;
+
     fn len(&self) -> usize {
         SmallVec::len(self)
     }
 
-    fn get(&self, index: usize) -> &Item {
+    fn get(&self, index: usize) -> &Self::Item {
         &self[index]
     }
 
-    fn get_mut(&mut self, index: usize) -> &mut Item {
+    fn get_mut(&mut self, index: usize) -> &mut Self::Item {
         &mut self[index]
     }
 
-    fn insert(&mut self, index: usize, item: Item) {
+    fn insert(&mut self, index: usize, item: Self::Item) {
         SmallVec::insert(self, index, item)
     }
 

@@ -9,14 +9,11 @@ mod arrayvec;
 #[cfg(feature = "smallvec")]
 mod smallvec;
 
-use core::{
-    marker::PhantomData,
-    ops::{Deref, DerefMut},
-};
+use core::ops::{Deref, DerefMut};
 use tap::TapFallible;
 
-pub trait Edit<Item>: List<Item> + Sized {
-    fn edit(&mut self, mut edit: impl FnMut(Slot<Self, Item>)) {
+pub trait Edit: List + Sized {
+    fn edit(&mut self, mut edit: impl FnMut(Slot<Self>)) {
         let mut index = 0;
 
         while index < self.len() {
@@ -26,7 +23,7 @@ pub trait Edit<Item>: List<Item> + Sized {
 
     fn try_edit<Error>(
         &mut self,
-        mut edit: impl FnMut(Slot<Self, Item>) -> Result<(), Error>,
+        mut edit: impl FnMut(Slot<Self>) -> Result<(), Error>,
     ) -> Result<(), Error> {
         let mut index = 0;
 
@@ -39,14 +36,16 @@ pub trait Edit<Item>: List<Item> + Sized {
 }
 
 #[allow(clippy::len_without_is_empty)]
-pub trait List<Item> {
+pub trait List {
+    type Item;
+
     fn len(&self) -> usize;
-    fn get(&self, index: usize) -> &Item;
-    fn get_mut(&mut self, index: usize) -> &mut Item;
-    fn insert(&mut self, index: usize, item: Item);
+    fn get(&self, index: usize) -> &Self::Item;
+    fn get_mut(&mut self, index: usize) -> &mut Self::Item;
+    fn insert(&mut self, index: usize, item: Self::Item);
     fn remove(&mut self, index: usize);
 
-    fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Item>) {
+    fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Self::Item>) {
         if let Some(item) = items.next() {
             *self.get_mut(index) = item;
 
@@ -59,42 +58,34 @@ pub trait List<Item> {
     }
 }
 
-struct Iteration<'a, List, Item>
-where
-    List: crate::List<Item>,
-{
+struct Iteration<'a, List: crate::List> {
     list: &'a mut List,
     index: &'a mut usize,
     stride: Stride,
-    phantom: PhantomData<Item>,
 }
 
-impl<'a, List, Item> Iteration<'a, List, Item>
-where
-    List: crate::List<Item>,
-{
-    fn new(list: &'a mut List, index: &'a mut usize) -> Iteration<'a, List, Item> {
+impl<'a, List: crate::List> Iteration<'a, List> {
+    fn new(list: &'a mut List, index: &'a mut usize) -> Iteration<'a, List> {
         Iteration {
             list,
             index,
             stride: Stride::new(),
-            phantom: PhantomData,
         }
     }
 
-    fn perform(mut self, edit: &mut impl FnMut(Slot<List, Item>)) {
+    fn perform(mut self, edit: &mut impl FnMut(Slot<List>)) {
         self.apply(edit);
         self.advance();
     }
 
     fn try_perform<Error>(
         mut self,
-        edit: &mut impl FnMut(Slot<List, Item>) -> Result<(), Error>,
+        edit: &mut impl FnMut(Slot<List>) -> Result<(), Error>,
     ) -> Result<(), Error> {
         self.apply(edit).tap_ok(|_| self.advance())
     }
 
-    fn apply<Output>(&mut self, edit: &mut impl FnMut(Slot<List, Item>) -> Output) -> Output {
+    fn apply<Output>(&mut self, edit: &mut impl FnMut(Slot<List>) -> Output) -> Output {
         edit(Slot::new(self.list, *self.index, &mut self.stride))
     }
 
@@ -119,47 +110,39 @@ impl Stride {
     }
 }
 
-pub struct Slot<'a, List, Item>
-where
-    List: crate::List<Item>,
-{
+pub struct Slot<'a, List: crate::List> {
     list: &'a mut List,
     index: usize,
     stride: &'a mut Stride,
-    phantom: PhantomData<Item>,
 }
 
-impl<'a, List, Item> Slot<'a, List, Item>
-where
-    List: crate::List<Item>,
-{
-    fn new(list: &'a mut List, index: usize, stride: &'a mut Stride) -> Slot<'a, List, Item> {
+impl<'a, List: crate::List> Slot<'a, List> {
+    fn new(list: &'a mut List, index: usize, stride: &'a mut Stride) -> Slot<'a, List> {
         Slot {
             list,
             index,
             stride,
-            phantom: PhantomData,
         }
     }
 
-    pub fn insert_before(self, item: Item) {
+    pub fn insert_before(self, item: List::Item) {
         self.stride.set(2);
         self.list.insert(self.index, item);
     }
 
-    pub fn insert_after(self, item: Item) {
+    pub fn insert_after(self, item: List::Item) {
         self.stride.set(2);
         self.list.insert(self.index + 1, item);
     }
 
     pub fn replace<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
     where
-        IntoIter: Iterator<Item = Item> + ExactSizeIterator,
+        IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
     {
         self.splice(items.into_iter())
     }
 
-    pub fn splice(self, items: impl Iterator<Item = Item> + ExactSizeIterator) {
+    pub fn splice(self, items: impl Iterator<Item = List::Item> + ExactSizeIterator) {
         self.stride.set(items.len());
         self.list.splice(self.index, items);
     }
@@ -170,22 +153,16 @@ where
     }
 }
 
-impl<'a, List, Item> Deref for Slot<'a, List, Item>
-where
-    List: crate::List<Item>,
-{
-    type Target = Item;
+impl<'a, List: crate::List> Deref for Slot<'a, List> {
+    type Target = List::Item;
 
-    fn deref(&self) -> &Item {
+    fn deref(&self) -> &Self::Target {
         self.list.get(self.index)
     }
 }
 
-impl<'a, List, Item> DerefMut for Slot<'a, List, Item>
-where
-    List: crate::List<Item>,
-{
-    fn deref_mut(&mut self) -> &mut Item {
+impl<'a, List: crate::List> DerefMut for Slot<'a, List> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
         self.list.get_mut(self.index)
     }
 }

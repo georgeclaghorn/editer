@@ -3,9 +3,11 @@ extern crate alloc;
 use crate::{Edit, List};
 use alloc::vec::Vec;
 
-impl<Item> Edit<Item> for Vec<Item> {}
+impl<Item> Edit for Vec<Item> {}
 
-impl<Item> List<Item> for Vec<Item> {
+impl<Item> List for Vec<Item> {
+    type Item = Item;
+
     fn len(&self) -> usize {
         Vec::len(self)
     }
