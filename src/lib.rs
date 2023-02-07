@@ -159,3 +159,12 @@ impl<'a, List: crate::List> DerefMut for Slot<'a, List> {
         self.list.get_mut(self.index)
     }
 }
+
+impl<'a, List: crate::List> PartialEq<List::Item> for Slot<'a, List>
+where
+    List::Item: PartialEq,
+{
+    fn eq(&self, other: &List::Item) -> bool {
+        **self == *other
+    }
+}

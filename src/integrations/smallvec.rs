@@ -37,7 +37,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|mut item| {
-            if *item == 1 {
+            if item == 1 {
                 *item = 6;
             }
         });
@@ -50,7 +50,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|mut item| {
-            if *item == 3 {
+            if item == 3 {
                 *item = 6;
             }
         });
@@ -63,7 +63,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|mut item| {
-            if *item == 5 {
+            if item == 5 {
                 *item = 6;
             }
         });
@@ -89,7 +89,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 3 {
+            if item == 3 {
                 item.replace([6, 7, 8]);
             }
         });
@@ -102,7 +102,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 5 {
+            if item == 5 {
                 item.replace([6, 7, 8]);
             }
         });
@@ -128,7 +128,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 3 {
+            if item == 3 {
                 item.remove();
             }
         });
@@ -141,7 +141,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 5 {
+            if item == 5 {
                 item.remove();
             }
         });
@@ -154,7 +154,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 1 {
+            if item == 1 {
                 item.insert_before(6);
             }
         });
@@ -167,7 +167,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 3 {
+            if item == 3 {
                 item.insert_before(6);
             }
         });
@@ -180,7 +180,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 5 {
+            if item == 5 {
                 item.insert_before(6);
             }
         });
@@ -193,7 +193,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 1 {
+            if item == 1 {
                 item.insert_after(6);
             }
         });
@@ -206,7 +206,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 3 {
+            if item == 3 {
                 item.insert_after(6);
             }
         });
@@ -219,7 +219,7 @@ mod tests {
         let mut items = SmallVec::from([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
-            if *item == 5 {
+            if item == 5 {
                 item.insert_after(6);
             }
         });
