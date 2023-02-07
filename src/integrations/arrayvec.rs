@@ -1,7 +1,7 @@
 use crate::{Edit, List};
 use arrayvec::ArrayVec;
 
-impl<Item, const CAP: usize> Edit for ArrayVec<Item, CAP> {}
+impl<Item, const CAP: usize> Edit<Item> for ArrayVec<Item, CAP> {}
 
 impl<Item, const CAP: usize> List for ArrayVec<Item, CAP> {
     type Item = Item;

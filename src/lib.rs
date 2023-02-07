@@ -6,7 +6,7 @@ mod integrations;
 
 use crate::slot::Slot;
 
-pub trait Edit: List {
+pub trait Edit<Item>: List<Item = Item> {
     fn edit(&mut self, mut edit: impl FnMut(Slot<Self>)) {
         let mut index = 0;
 

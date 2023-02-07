@@ -1,9 +1,12 @@
 use crate::{Edit, List};
 use smallvec::SmallVec;
 
-impl<Array: smallvec::Array> Edit for SmallVec<Array> {}
+impl<Item, Array> Edit<Item> for SmallVec<Array> where Array: smallvec::Array<Item = Item> {}
 
-impl<Array: smallvec::Array> List for SmallVec<Array> {
+impl<Item, Array> List for SmallVec<Array>
+where
+    Array: smallvec::Array<Item = Item>,
+{
     type Item = Array::Item;
 
     fn len(&self) -> usize {

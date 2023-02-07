@@ -3,7 +3,7 @@ extern crate alloc;
 use crate::{Edit, List};
 use alloc::collections::VecDeque;
 
-impl<Item> Edit for VecDeque<Item> {}
+impl<Item> Edit<Item> for VecDeque<Item> {}
 
 impl<Item> List for VecDeque<Item> {
     type Item = Item;
