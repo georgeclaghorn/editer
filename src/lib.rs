@@ -176,3 +176,12 @@ where
         **self == *other
     }
 }
+
+impl<'a, List: crate::List> PartialOrd<List::Item> for Slot<'a, List>
+where
+    List::Item: PartialOrd,
+{
+    fn partial_cmp(&self, other: &List::Item) -> Option<core::cmp::Ordering> {
+        self.get().partial_cmp(other)
+    }
+}
