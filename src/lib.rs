@@ -5,14 +5,15 @@ mod slot;
 mod integrations;
 
 use crate::slot::Slot;
-use tap::TapFallible;
 
 pub trait Edit: List {
     fn edit(&mut self, mut edit: impl FnMut(Slot<Self>)) {
         let mut index = 0;
 
         while index < self.len() {
-            Iteration::new(self, &mut index).perform(&mut edit);
+            let mut stride = 1;
+            edit(Slot::new(self, index, &mut stride));
+            index += stride;
         }
     }
 
@@ -23,7 +24,9 @@ pub trait Edit: List {
         let mut index = 0;
 
         while index < self.len() {
-            Iteration::new(self, &mut index).try_perform(&mut edit)?;
+            let mut stride = 1;
+            edit(Slot::new(self, index, &mut stride))?;
+            index += stride;
         }
 
         Ok(())
@@ -50,63 +53,5 @@ pub trait List {
         } else {
             self.remove(index);
         }
-    }
-}
-
-struct Iteration<'list, 'walk, List>
-where
-    List: crate::List + ?Sized,
-{
-    list: &'list mut List,
-    index: &'walk mut usize,
-    stride: Stride,
-}
-
-impl<'list, 'walk, List> Iteration<'list, 'walk, List>
-where
-    List: crate::List + ?Sized,
-{
-    fn new(list: &'list mut List, index: &'walk mut usize) -> Iteration<'list, 'walk, List> {
-        Iteration {
-            list,
-            index,
-            stride: Stride::new(),
-        }
-    }
-
-    fn perform(mut self, edit: &mut impl FnMut(Slot<List>)) {
-        self.apply(edit);
-        self.advance();
-    }
-
-    fn try_perform<Error>(
-        mut self,
-        edit: &mut impl FnMut(Slot<List>) -> Result<(), Error>,
-    ) -> Result<(), Error> {
-        self.apply(edit).tap_ok(|_| self.advance())
-    }
-
-    fn apply<Output>(&mut self, edit: &mut impl FnMut(Slot<List>) -> Output) -> Output {
-        edit(Slot::new(self.list, *self.index, &mut self.stride))
-    }
-
-    fn advance(self) {
-        *self.index += self.stride.get()
-    }
-}
-
-struct Stride(usize);
-
-impl Stride {
-    fn new() -> Stride {
-        Stride(1)
-    }
-
-    fn get(self) -> usize {
-        self.0
-    }
-
-    fn set(&mut self, value: usize) {
-        self.0 = value
     }
 }

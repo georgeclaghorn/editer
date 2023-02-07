@@ -1,4 +1,3 @@
-use crate::Stride;
 use core::{
     fmt::{Debug, Display},
     ops::{Deref, DerefMut},
@@ -10,7 +9,7 @@ where
 {
     list: &'list mut List,
     index: usize,
-    stride: &'iteration mut Stride,
+    stride: &'iteration mut usize,
 }
 
 impl<'list, 'iteration, List> Slot<'list, 'iteration, List>
@@ -20,7 +19,7 @@ where
     pub(crate) fn new(
         list: &'list mut List,
         index: usize,
-        stride: &'iteration mut Stride,
+        stride: &'iteration mut usize,
     ) -> Slot<'list, 'iteration, List> {
         Slot {
             list,
@@ -38,13 +37,13 @@ where
     }
 
     pub fn insert_before(self, item: List::Item) {
-        self.stride.set(2);
         self.list.insert(self.index, item);
+        *self.stride = 2;
     }
 
     pub fn insert_after(self, item: List::Item) {
-        self.stride.set(2);
         self.list.insert(self.index + 1, item);
+        *self.stride = 2;
     }
 
     pub fn replace<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
@@ -55,13 +54,14 @@ where
     }
 
     pub fn splice(self, items: impl Iterator<Item = List::Item> + ExactSizeIterator) {
-        self.stride.set(items.len());
+        let stride = items.len();
         self.list.splice(self.index, items);
+        *self.stride = stride;
     }
 
     pub fn remove(self) {
-        self.stride.set(0);
         self.list.remove(self.index);
+        *self.stride = 0;
     }
 }
 
@@ -127,12 +127,12 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::Slot;
 
     #[test]
     fn eq() {
         let mut list = vec![1, 2, 3, 4, 5];
-        let mut stride = Stride::new();
+        let mut stride = 1;
         let slot = Slot::new(&mut list, 2, &mut stride);
 
         assert_eq!(slot, 3);
@@ -142,7 +142,7 @@ mod tests {
     #[test]
     fn cmp() {
         let mut list = vec![1, 2, 3, 4, 5];
-        let mut stride = Stride::new();
+        let mut stride = 1;
         let slot = Slot::new(&mut list, 2, &mut stride);
 
         assert!(slot < 5);
@@ -152,7 +152,7 @@ mod tests {
     #[test]
     fn display() {
         let mut list = vec![1, 2, 3, 4, 5];
-        let mut stride = Stride::new();
+        let mut stride = 1;
         let slot = Slot::new(&mut list, 2, &mut stride);
 
         assert_eq!("3", format!("{}", slot));
@@ -161,7 +161,7 @@ mod tests {
     #[test]
     fn debug() {
         let mut list = vec![1, 2, 3, 4, 5];
-        let mut stride = Stride::new();
+        let mut stride = 1;
         let slot = Slot::new(&mut list, 2, &mut stride);
 
         assert_eq!("Slot(3)", format!("{:?}", slot));
