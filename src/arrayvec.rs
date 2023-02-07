@@ -19,7 +19,7 @@ impl<Item, const CAP: usize> List for ArrayVec<Item, CAP> {
     }
 
     fn insert(&mut self, index: usize, item: Item) {
-        ArrayVec::insert(self, index, item)
+        ArrayVec::insert(self, index, item);
     }
 
     fn remove(&mut self, index: usize) {

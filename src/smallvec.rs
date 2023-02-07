@@ -19,7 +19,7 @@ impl<Array: smallvec::Array> List for SmallVec<Array> {
     }
 
     fn insert(&mut self, index: usize, item: Self::Item) {
-        SmallVec::insert(self, index, item)
+        SmallVec::insert(self, index, item);
     }
 
     fn remove(&mut self, index: usize) {
