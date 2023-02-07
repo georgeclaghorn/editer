@@ -1,13 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-#[cfg(feature = "alloc")]
-mod alloc;
-
-#[cfg(feature = "arrayvec")]
-mod arrayvec;
-
-#[cfg(feature = "smallvec")]
-mod smallvec;
+mod integrations;
 
 use core::ops::{Deref, DerefMut};
 use tap::TapFallible;
