@@ -53,14 +53,20 @@ pub trait List {
     }
 }
 
-struct Iteration<'a, List: crate::List + ?Sized> {
-    list: &'a mut List,
-    index: &'a mut usize,
+struct Iteration<'list, 'walk, List>
+where
+    List: crate::List + ?Sized,
+{
+    list: &'list mut List,
+    index: &'walk mut usize,
     stride: Stride,
 }
 
-impl<'a, List: crate::List + ?Sized> Iteration<'a, List> {
-    fn new(list: &'a mut List, index: &'a mut usize) -> Iteration<'a, List> {
+impl<'list, 'walk, List> Iteration<'list, 'walk, List>
+where
+    List: crate::List + ?Sized,
+{
+    fn new(list: &'list mut List, index: &'walk mut usize) -> Iteration<'list, 'walk, List> {
         Iteration {
             list,
             index,

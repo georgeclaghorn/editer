@@ -4,14 +4,24 @@ use core::{
     ops::{Deref, DerefMut},
 };
 
-pub struct Slot<'a, List: crate::List + ?Sized> {
-    list: &'a mut List,
+pub struct Slot<'list, 'iteration, List>
+where
+    List: crate::List + ?Sized,
+{
+    list: &'list mut List,
     index: usize,
-    stride: &'a mut Stride,
+    stride: &'iteration mut Stride,
 }
 
-impl<'a, List: crate::List + ?Sized> Slot<'a, List> {
-    pub(crate) fn new(list: &'a mut List, index: usize, stride: &'a mut Stride) -> Slot<'a, List> {
+impl<'list, 'iteration, List> Slot<'list, 'iteration, List>
+where
+    List: crate::List + ?Sized,
+{
+    pub(crate) fn new(
+        list: &'list mut List,
+        index: usize,
+        stride: &'iteration mut Stride,
+    ) -> Slot<'list, 'iteration, List> {
         Slot {
             list,
             index,
@@ -55,7 +65,10 @@ impl<'a, List: crate::List + ?Sized> Slot<'a, List> {
     }
 }
 
-impl<'a, List: crate::List + ?Sized> Deref for Slot<'a, List> {
+impl<'list, 'iteration, List> Deref for Slot<'list, 'iteration, List>
+where
+    List: crate::List + ?Sized,
+{
     type Target = List::Item;
 
     fn deref(&self) -> &Self::Target {
@@ -63,14 +76,18 @@ impl<'a, List: crate::List + ?Sized> Deref for Slot<'a, List> {
     }
 }
 
-impl<'a, List: crate::List + ?Sized> DerefMut for Slot<'a, List> {
+impl<'list, 'iteration, List> DerefMut for Slot<'list, 'iteration, List>
+where
+    List: crate::List + ?Sized,
+{
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.get_mut()
     }
 }
 
-impl<'a, List: crate::List + ?Sized> PartialEq<List::Item> for Slot<'a, List>
+impl<'list, 'iteration, List> PartialEq<List::Item> for Slot<'list, 'iteration, List>
 where
+    List: crate::List + ?Sized,
     List::Item: PartialEq,
 {
     fn eq(&self, other: &List::Item) -> bool {
@@ -78,8 +95,9 @@ where
     }
 }
 
-impl<'a, List: crate::List + ?Sized> PartialOrd<List::Item> for Slot<'a, List>
+impl<'list, 'iteration, List> PartialOrd<List::Item> for Slot<'list, 'iteration, List>
 where
+    List: crate::List + ?Sized,
     List::Item: PartialOrd,
 {
     fn partial_cmp(&self, other: &List::Item) -> Option<core::cmp::Ordering> {
@@ -87,8 +105,9 @@ where
     }
 }
 
-impl<'a, List: crate::List + ?Sized> Display for Slot<'a, List>
+impl<'list, 'iteration, List> Display for Slot<'list, 'iteration, List>
 where
+    List: crate::List + ?Sized,
     List::Item: Display,
 {
     fn fmt(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
@@ -96,8 +115,9 @@ where
     }
 }
 
-impl<'a, List: crate::List + ?Sized> Debug for Slot<'a, List>
+impl<'list, 'iteration, List> Debug for Slot<'list, 'iteration, List>
 where
+    List: crate::List + ?Sized,
     List::Item: Debug,
 {
     fn fmt(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
