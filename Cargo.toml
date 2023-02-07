@@ -6,11 +6,13 @@ edition = "2021"
 [dependencies]
 arrayvec = { version = "0.7", optional = true, default-features = false }
 smallvec = { version = "1.10", optional = true }
+tinyvec = { version = "1.6", optional = true, features = ["rustc_1_55"] }
 
 [dev-dependencies]
-editer = { path = ".", features = ["arrayvec", "smallvec"] }
+editer = { path = ".", features = ["arrayvec", "smallvec", "tinyvec"] }
 arrayvec = "0.7"
 smallvec = "1.10"
+tinyvec = { version = "1.6", features = ["alloc"] }
 
 [features]
 default = ["std"]
