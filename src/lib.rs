@@ -5,7 +5,7 @@ mod integrations;
 use core::ops::{Deref, DerefMut};
 use tap::TapFallible;
 
-pub trait Edit: List + Sized {
+pub trait Edit: List {
     fn edit(&mut self, mut edit: impl FnMut(Slot<Self>)) {
         let mut index = 0;
 
@@ -51,13 +51,13 @@ pub trait List {
     }
 }
 
-struct Iteration<'a, List: crate::List> {
+struct Iteration<'a, List: crate::List + ?Sized> {
     list: &'a mut List,
     index: &'a mut usize,
     stride: Stride,
 }
 
-impl<'a, List: crate::List> Iteration<'a, List> {
+impl<'a, List: crate::List + ?Sized> Iteration<'a, List> {
     fn new(list: &'a mut List, index: &'a mut usize) -> Iteration<'a, List> {
         Iteration {
             list,
@@ -103,13 +103,13 @@ impl Stride {
     }
 }
 
-pub struct Slot<'a, List: crate::List> {
+pub struct Slot<'a, List: crate::List + ?Sized> {
     list: &'a mut List,
     index: usize,
     stride: &'a mut Stride,
 }
 
-impl<'a, List: crate::List> Slot<'a, List> {
+impl<'a, List: crate::List + ?Sized> Slot<'a, List> {
     fn new(list: &'a mut List, index: usize, stride: &'a mut Stride) -> Slot<'a, List> {
         Slot {
             list,
@@ -154,7 +154,7 @@ impl<'a, List: crate::List> Slot<'a, List> {
     }
 }
 
-impl<'a, List: crate::List> Deref for Slot<'a, List> {
+impl<'a, List: crate::List + ?Sized> Deref for Slot<'a, List> {
     type Target = List::Item;
 
     fn deref(&self) -> &Self::Target {
@@ -162,13 +162,13 @@ impl<'a, List: crate::List> Deref for Slot<'a, List> {
     }
 }
 
-impl<'a, List: crate::List> DerefMut for Slot<'a, List> {
+impl<'a, List: crate::List + ?Sized> DerefMut for Slot<'a, List> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.get_mut()
     }
 }
 
-impl<'a, List: crate::List> PartialEq<List::Item> for Slot<'a, List>
+impl<'a, List: crate::List + ?Sized> PartialEq<List::Item> for Slot<'a, List>
 where
     List::Item: PartialEq,
 {
@@ -177,7 +177,7 @@ where
     }
 }
 
-impl<'a, List: crate::List> PartialOrd<List::Item> for Slot<'a, List>
+impl<'a, List: crate::List + ?Sized> PartialOrd<List::Item> for Slot<'a, List>
 where
     List::Item: PartialOrd,
 {
