@@ -11,9 +11,9 @@ pub trait Edit: List {
         let mut index = 0;
 
         while index < self.len() {
-            let mut stride = 1;
+            let mut stride = Stride(1);
             edit(Slot::new(self, index, &mut stride));
-            index += stride;
+            index += stride.get();
         }
     }
 
@@ -24,9 +24,9 @@ pub trait Edit: List {
         let mut index = 0;
 
         while index < self.len() {
-            let mut stride = 1;
+            let mut stride = Stride(1);
             edit(Slot::new(self, index, &mut stride))?;
-            index += stride;
+            index += stride.get();
         }
 
         Ok(())
@@ -53,5 +53,17 @@ pub trait List {
         } else {
             self.remove(index);
         }
+    }
+}
+
+struct Stride(usize);
+
+impl Stride {
+    pub fn set(&mut self, value: usize) {
+        self.0 = value
+    }
+
+    pub fn get(self) -> usize {
+        self.0
     }
 }
