@@ -118,6 +118,14 @@ impl<'a, List: crate::List> Slot<'a, List> {
         }
     }
 
+    pub fn get(&self) -> &List::Item {
+        self.list.get(self.index)
+    }
+
+    pub fn get_mut(&mut self) -> &mut List::Item {
+        self.list.get_mut(self.index)
+    }
+
     pub fn insert_before(self, item: List::Item) {
         self.stride.set(2);
         self.list.insert(self.index, item);
@@ -150,13 +158,13 @@ impl<'a, List: crate::List> Deref for Slot<'a, List> {
     type Target = List::Item;
 
     fn deref(&self) -> &Self::Target {
-        self.list.get(self.index)
+        self.get()
     }
 }
 
 impl<'a, List: crate::List> DerefMut for Slot<'a, List> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        self.list.get_mut(self.index)
+        self.get_mut()
     }
 }
 
