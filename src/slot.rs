@@ -3,24 +3,24 @@ use core::{
     ops::{Deref, DerefMut},
 };
 
-pub struct Slot<'list, 'iteration, List>
+pub struct Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
 {
     list: &'list mut List,
     index: usize,
-    stride: &'iteration mut usize,
+    stride: &'stride mut usize,
 }
 
-impl<'list, 'iteration, List> Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
 {
     pub(crate) fn new(
         list: &'list mut List,
         index: usize,
-        stride: &'iteration mut usize,
-    ) -> Slot<'list, 'iteration, List> {
+        stride: &'stride mut usize,
+    ) -> Slot<'list, 'stride, List> {
         Slot {
             list,
             index,
@@ -65,7 +65,7 @@ where
     }
 }
 
-impl<'list, 'iteration, List> Deref for Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> Deref for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
 {
@@ -76,7 +76,7 @@ where
     }
 }
 
-impl<'list, 'iteration, List> DerefMut for Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> DerefMut for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
 {
@@ -85,7 +85,7 @@ where
     }
 }
 
-impl<'list, 'iteration, List> PartialEq<List::Item> for Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> PartialEq<List::Item> for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
     List::Item: PartialEq,
@@ -95,7 +95,7 @@ where
     }
 }
 
-impl<'list, 'iteration, List> PartialOrd<List::Item> for Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> PartialOrd<List::Item> for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
     List::Item: PartialOrd,
@@ -105,7 +105,7 @@ where
     }
 }
 
-impl<'list, 'iteration, List> Display for Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> Display for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
     List::Item: Display,
@@ -115,7 +115,7 @@ where
     }
 }
 
-impl<'list, 'iteration, List> Debug for Slot<'list, 'iteration, List>
+impl<'list, 'stride, List> Debug for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
     List::Item: Debug,
