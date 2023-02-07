@@ -2,7 +2,7 @@
 
 mod integrations;
 
-use core::ops::{Deref, DerefMut};
+use core::{fmt::Display, ops::{Deref, DerefMut}};
 use tap::TapFallible;
 
 pub trait Edit: List {
@@ -183,5 +183,14 @@ where
 {
     fn partial_cmp(&self, other: &List::Item) -> Option<core::cmp::Ordering> {
         self.get().partial_cmp(other)
+    }
+}
+
+impl<'a, List: crate::List + ?Sized> Display for Slot<'a, List>
+where
+    List::Item: Display,
+{
+    fn fmt(&self, formatter: &mut core::fmt::Formatter) -> core::fmt::Result {
+        self.get().fmt(formatter)
     }
 }
