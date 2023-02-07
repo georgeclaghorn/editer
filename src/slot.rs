@@ -110,6 +110,26 @@ mod tests {
     use super::*;
 
     #[test]
+    fn eq() {
+        let mut list = vec![1, 2, 3, 4, 5];
+        let mut stride = Stride::new();
+        let slot = Slot::new(&mut list, 2, &mut stride);
+
+        assert_eq!(slot, 3);
+        assert_ne!(slot, 5);
+    }
+
+    #[test]
+    fn cmp() {
+        let mut list = vec![1, 2, 3, 4, 5];
+        let mut stride = Stride::new();
+        let slot = Slot::new(&mut list, 2, &mut stride);
+
+        assert!(slot < 5);
+        assert!(!(slot > 5));
+    }
+
+    #[test]
     fn display() {
         let mut list = vec![1, 2, 3, 4, 5];
         let mut stride = Stride::new();
