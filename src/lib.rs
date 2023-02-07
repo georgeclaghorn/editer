@@ -173,7 +173,7 @@ where
     List::Item: PartialEq,
 {
     fn eq(&self, other: &List::Item) -> bool {
-        **self == *other
+        self.get().eq(other)
     }
 }
 
