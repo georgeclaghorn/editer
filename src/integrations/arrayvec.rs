@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn replacing_the_first_item_with_many() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 1 {
@@ -81,15 +81,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([6, 7, 8, 2, 3, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([6, 7, 8, 2, 3, 4, 5]));
     }
 
     #[test]
     fn replacing_an_interior_item_with_many() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 3 {
@@ -97,15 +94,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 6, 7, 8, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 6, 7, 8, 4, 5]));
     }
 
     #[test]
     fn replacing_the_last_item_with_many() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 5 {
@@ -113,15 +107,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 3, 4, 6, 7, 8].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 3, 4, 6, 7, 8]));
     }
 
     #[test]
     fn removing_the_first_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 1 {
@@ -129,15 +120,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([2, 3, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([2, 3, 4, 5]));
     }
 
     #[test]
     fn removing_an_interior_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 3 {
@@ -145,15 +133,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 4, 5]));
     }
 
     #[test]
     fn removing_the_last_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 5 {
@@ -161,15 +146,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 3, 4].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 3, 4]));
     }
 
     #[test]
     fn inserting_an_item_before_the_first_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 1 {
@@ -177,15 +159,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([6, 1, 2, 3, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([6, 1, 2, 3, 4, 5]));
     }
 
     #[test]
     fn inserting_an_item_before_an_interior_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 3 {
@@ -193,15 +172,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 6, 3, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 6, 3, 4, 5]));
     }
 
     #[test]
     fn inserting_an_item_before_the_last_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 5 {
@@ -209,15 +185,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 3, 4, 6, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 3, 4, 6, 5]));
     }
 
     #[test]
     fn inserting_an_item_after_the_first_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 1 {
@@ -225,15 +198,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 6, 2, 3, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 6, 2, 3, 4, 5]));
     }
 
     #[test]
     fn inserting_an_item_after_an_interior_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 3 {
@@ -241,15 +211,12 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 3, 6, 4, 5].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 3, 6, 4, 5]));
     }
 
     #[test]
     fn inserting_an_item_after_the_last_item() {
-        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
+        let mut items: ArrayVec<_, 10> = ArrayVec::from_iter([1, 2, 3, 4, 5]);
 
         items.edit(|item| {
             if item == 5 {
@@ -257,9 +224,6 @@ mod tests {
             }
         });
 
-        assert_eq!(
-            items,
-            ArrayVec::<_, 10>::from_iter([1, 2, 3, 4, 5, 6].iter().copied())
-        );
+        assert_eq!(items, ArrayVec::from_iter([1, 2, 3, 4, 5, 6]));
     }
 }
