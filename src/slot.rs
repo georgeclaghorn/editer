@@ -153,6 +153,56 @@ mod tests {
     use crate::Stride;
 
     #[test]
+    fn deref() {
+        let mut list = vec![1, 2, 3, 4, 5];
+        let mut stride = Stride(1);
+        let slot = Slot::new(&mut list, 2, &mut stride);
+
+        let i: u64 = *slot;
+
+        assert_eq!(i, 3);
+    }
+
+    #[test]
+    fn deref_mut() {
+        let mut list = vec![1, 2, 3, 4, 5];
+        let mut stride = Stride(1);
+        let mut slot = Slot::new(&mut list, 2, &mut stride);
+
+        *slot = 6;
+
+        assert_eq!(list[2], 6);
+    }
+
+    #[test]
+    fn as_ref() {
+        let mut list = vec![1, 2, 3, 4, 5];
+        let mut stride = Stride(1);
+        let slot = Slot::new(&mut list, 2, &mut stride);
+
+        fn inner(i: &u64) {
+            assert_eq!(*i, 3);
+        }
+
+        inner(&slot);
+    }
+
+    #[test]
+    fn as_mut() {
+        let mut list = vec![1, 2, 3, 4, 5];
+        let mut stride = Stride(1);
+        let mut slot = Slot::new(&mut list, 2, &mut stride);
+
+        fn inner(i: &mut u64) {
+            *i = 6;
+        }
+
+        inner(&mut slot);
+
+        assert_eq!(list[2], 6);
+    }
+
+    #[test]
     fn eq() {
         let mut list = vec![1, 2, 3, 4, 5];
         let mut stride = Stride(1);
