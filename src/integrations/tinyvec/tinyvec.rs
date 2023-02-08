@@ -116,6 +116,45 @@ mod tests {
     }
 
     #[test]
+    fn borrowing_and_replacing_the_first_item_with_many() {
+        let mut items: TinyVec<[_; 10]> = TinyVec::from_iter([1, 2, 3, 4, 5]);
+
+        edit(&mut items, |item| {
+            if item == 1 {
+                item.replace_with(|item| [item + 5, item + 6, item + 7]);
+            }
+        });
+
+        assert_eq!(items, TinyVec::from_iter([6, 7, 8, 2, 3, 4, 5]));
+    }
+
+    #[test]
+    fn borrowing_and_replacing_an_interior_item_with_many() {
+        let mut items: TinyVec<[_; 10]> = TinyVec::from_iter([1, 2, 3, 4, 5]);
+
+        edit(&mut items, |item| {
+            if item == 3 {
+                item.replace_with(|item| [item + 3, item + 4, item + 5]);
+            }
+        });
+
+        assert_eq!(items, TinyVec::from_iter([1, 2, 6, 7, 8, 4, 5]));
+    }
+
+    #[test]
+    fn borrowing_and_replacing_the_last_item_with_many() {
+        let mut items: TinyVec<[_; 10]> = TinyVec::from_iter([1, 2, 3, 4, 5]);
+
+        edit(&mut items, |item| {
+            if item == 5 {
+                item.replace_with(|item| [item + 1, item + 2, item + 3]);
+            }
+        });
+
+        assert_eq!(items, TinyVec::from_iter([1, 2, 3, 4, 6, 7, 8]));
+    }
+
+    #[test]
     fn removing_the_first_item() {
         let mut items: TinyVec<[_; 10]> = TinyVec::from_iter([1, 2, 3, 4, 5]);
 
