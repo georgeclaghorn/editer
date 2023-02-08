@@ -1,36 +1,39 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 mod slot;
+use self::slot::Slot;
 
 mod integrations;
 
-use crate::slot::Slot;
+pub fn edit<List>(items: &mut List, mut edit: impl FnMut(Slot<List>))
+where
+    List: self::List,
+{
+    let mut index = 0;
 
-pub trait Edit<Item>: List<Item = Item> {
-    fn edit(&mut self, mut edit: impl FnMut(Slot<Self>)) {
-        let mut index = 0;
+    while index < items.len() {
+        let mut stride = Stride(1);
+        edit(Slot::new(items, index, &mut stride));
+        index += stride.get();
+    }
+}
 
-        while index < self.len() {
-            let mut stride = Stride(1);
-            edit(Slot::new(self, index, &mut stride));
-            index += stride.get();
-        }
+pub fn try_edit<List, Error>(
+    items: &mut List,
+    mut edit: impl FnMut(Slot<List>) -> Result<(), Error>,
+) -> Result<(), Error>
+where
+    List: self::List,
+{
+    let mut index = 0;
+
+    while index < items.len() {
+        let mut stride = Stride(1);
+        edit(Slot::new(items, index, &mut stride))?;
+        index += stride.get();
     }
 
-    fn try_edit<Error>(
-        &mut self,
-        mut edit: impl FnMut(Slot<Self>) -> Result<(), Error>,
-    ) -> Result<(), Error> {
-        let mut index = 0;
-
-        while index < self.len() {
-            let mut stride = Stride(1);
-            edit(Slot::new(self, index, &mut stride))?;
-            index += stride.get();
-        }
-
-        Ok(())
-    }
+    Ok(())
 }
 
 #[allow(clippy::len_without_is_empty)]

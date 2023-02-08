@@ -1,7 +1,5 @@
-use crate::{Edit, List};
+use crate::List;
 use tinyvec::ArrayVec;
-
-impl<Item: Default, const N: usize> Edit<Item> for ArrayVec<[Item; N]> {}
 
 impl<Item: Default, const N: usize> List for ArrayVec<[Item; N]> {
     type Item = Item;
@@ -29,14 +27,14 @@ impl<Item: Default, const N: usize> List for ArrayVec<[Item; N]> {
 
 #[cfg(test)]
 mod tests {
-    use crate::Edit;
+    use crate::edit;
     use tinyvec::ArrayVec;
 
     #[test]
     fn replacing_the_first_item_with_one() {
         let mut items = ArrayVec::from([1, 2, 3, 4, 5]);
 
-        items.edit(|mut item| {
+        edit(&mut items, |mut item| {
             if item == 1 {
                 *item = 6;
             }
@@ -49,7 +47,7 @@ mod tests {
     fn replacing_an_interior_item_with_one() {
         let mut items = ArrayVec::from([1, 2, 3, 4, 5]);
 
-        items.edit(|mut item| {
+        edit(&mut items, |mut item| {
             if item == 3 {
                 *item = 6;
             }
@@ -62,7 +60,7 @@ mod tests {
     fn replacing_the_last_item_with_one() {
         let mut items = ArrayVec::from([1, 2, 3, 4, 5]);
 
-        items.edit(|mut item| {
+        edit(&mut items, |mut item| {
             if item == 5 {
                 *item = 6;
             }
@@ -75,7 +73,7 @@ mod tests {
     fn replacing_the_first_item_with_many() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 1 {
                 item.replace([6, 7, 8])
             }
@@ -91,7 +89,7 @@ mod tests {
     fn replacing_an_interior_item_with_many() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 3 {
                 item.replace([6, 7, 8]);
             }
@@ -107,7 +105,7 @@ mod tests {
     fn replacing_the_last_item_with_many() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 5 {
                 item.replace([6, 7, 8]);
             }
@@ -123,7 +121,7 @@ mod tests {
     fn removing_the_first_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 1 {
                 item.remove();
             }
@@ -139,7 +137,7 @@ mod tests {
     fn removing_an_interior_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 3 {
                 item.remove();
             }
@@ -155,7 +153,7 @@ mod tests {
     fn removing_the_last_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 5 {
                 item.remove();
             }
@@ -171,7 +169,7 @@ mod tests {
     fn inserting_an_item_before_the_first_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 1 {
                 item.insert_before(6);
             }
@@ -187,7 +185,7 @@ mod tests {
     fn inserting_an_item_before_an_interior_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 3 {
                 item.insert_before(6);
             }
@@ -203,7 +201,7 @@ mod tests {
     fn inserting_an_item_before_the_last_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 5 {
                 item.insert_before(6);
             }
@@ -219,7 +217,7 @@ mod tests {
     fn inserting_an_item_after_the_first_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 1 {
                 item.insert_after(6);
             }
@@ -235,7 +233,7 @@ mod tests {
     fn inserting_an_item_after_an_interior_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 3 {
                 item.insert_after(6);
             }
@@ -251,7 +249,7 @@ mod tests {
     fn inserting_an_item_after_the_last_item() {
         let mut items: ArrayVec<[_; 10]> = ArrayVec::from_iter([1, 2, 3, 4, 5].iter().copied());
 
-        items.edit(|item| {
+        edit(&mut items, |item| {
             if item == 5 {
                 item.insert_after(6);
             }
