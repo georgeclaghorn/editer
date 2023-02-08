@@ -54,6 +54,17 @@ where
         self.splice(items.into_iter())
     }
 
+    pub fn replace_with<Replacements, IntoReplacementsIter>(
+        self,
+        build: impl FnOnce(&List::Item) -> Replacements,
+    ) where
+        Replacements: IntoIterator<IntoIter = IntoReplacementsIter>,
+        IntoReplacementsIter: Iterator<Item = List::Item> + ExactSizeIterator,
+    {
+        let replacements = build(&self);
+        self.replace(replacements);
+    }
+
     pub fn splice(self, items: impl Iterator<Item = List::Item> + ExactSizeIterator) {
         self.stride.set(items.len());
         self.list.splice(self.index, items);
