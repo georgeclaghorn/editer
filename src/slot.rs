@@ -85,6 +85,28 @@ where
     }
 }
 
+impl<'list, 'stride, Referent, List> AsRef<Referent> for Slot<'list, 'stride, List>
+where
+    Referent: ?Sized,
+    List: crate::List + ?Sized,
+    List::Item: AsRef<Referent>,
+{
+    fn as_ref(&self) -> &Referent {
+        self.deref().as_ref()
+    }
+}
+
+impl<'list, 'stride, Referent, List> AsMut<Referent> for Slot<'list, 'stride, List>
+where
+    Referent: ?Sized,
+    List: crate::List + ?Sized,
+    List::Item: AsMut<Referent>,
+{
+    fn as_mut(&mut self) -> &mut Referent {
+        self.deref_mut().as_mut()
+    }
+}
+
 impl<'list, 'stride, List> PartialEq<List::Item> for Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
