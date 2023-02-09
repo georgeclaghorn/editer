@@ -14,7 +14,8 @@ The [`edit`] function iterates over a given [`List`]. For each item in the list,
 function with a [`Slot`]. The `Slot` can be used to access the current item and/or mutate the list
 at the current position. You can:
 
-* Insert a new item before or after the current item.
+* Insert a new item before or after the current item using [`Slot::insert_before`] or
+  [`Slot::insert_after`].
 
   ```rust
   use editer::edit;
@@ -32,11 +33,10 @@ at the current position. You can:
   assert_eq!(items, vec![1, 2, 6, 7, 3, 4, 5]);
   ```
 
-* Replace the current item with zero or more new items.
+* Replace the current item with zero or more new items using [`DerefMut::deref_mut`] or
+  [`Slot::replace`].
 
   ```rust
-  use editer::edit;
-
   let mut items = vec![1, 2, 3, 4, 5];
 
   edit(&mut items, |mut item| {
@@ -52,11 +52,9 @@ at the current position. You can:
   assert_eq!(items, vec![1, 6, 7, 8, 9, 4, 5]);
   ```
 
-* Remove the current item.
+* Remove the current item using [`Slot::remove`].
 
   ```rust
-  use editer::edit;
-
   let mut items = vec![1, 2, 3, 4, 5];
 
   edit(&mut items, |item| {
@@ -71,10 +69,33 @@ at the current position. You can:
 [`try_edit`] is the fallible version of `edit`. It applies the given editor function to each item
 in the given list, like `edit`. It stops at the first error and returns it.
 
-[`edit`]: https://docs.rs/serde_magnus/latest/editer/fn.edit.html
-[`try_edit`]: https://docs.rs/serde_magnus/latest/editer/fn.try_edit.html
-[`List`]: https://docs.rs/serde_magnus/latest/editer/trait.List.html
-[`Slot`]: https://docs.rs/serde_magnus/latest/editer/slot/struct.Slot.html
+```rust
+use editer::try_edit;
+
+let mut items = vec![1, 2, 3, 4, 5];
+
+let result: Result<(), &str> = try_edit(&mut items, |item| {
+    if item == 4 {
+        Err("Whoops!")
+    } else {
+        item.remove();
+        Ok(())
+    }
+});
+
+assert_eq!(result, Err("Whoops!"));
+assert_eq!(items, vec![4, 5]);
+```
+
+[`edit`]: https://docs.rs/editer/latest/editer/fn.edit.html
+[`try_edit`]: https://docs.rs/editer/latest/editer/fn.try_edit.html
+[`List`]: https://docs.rs/editer/latest/editer/trait.List.html
+[`Slot`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html
+[`Slot::insert_before`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html#method.insert_before
+[`Slot::insert_after`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html#method.insert_after
+[`Slot::replace`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html#method.replace
+[`Slot::remove`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html#method.remove
+[`DerefMut::deref_mut`]: https://doc.rust-lang.org/core/ops/trait.DerefMut.html#tymethod.deref_mut
 
 ## Requirements
 
