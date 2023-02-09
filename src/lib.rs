@@ -1,6 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-mod slot;
+pub mod slot;
 use self::slot::Slot;
 
 mod integrations;
