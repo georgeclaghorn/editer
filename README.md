@@ -17,14 +17,14 @@ at the current position. You can:
 * Insert a new item before or after the current item.
 
   ```rust
+  use editer::edit;
+
   let mut items = vec![1, 2, 3, 4, 5];
 
-  edit(items, |item| {
+  edit(&mut items, |item| {
       if item == 2 {
           item.insert_after(6);
-      }
-
-      if item == 3 {
+      } else if item == 3 {
           item.insert_before(7);
       }
   });
@@ -35,9 +35,11 @@ at the current position. You can:
 * Replace the current item with zero or more new items.
 
   ```rust
+  use editer::edit;
+
   let mut items = vec![1, 2, 3, 4, 5];
 
-  edit(items, |mut item| {
+  edit(&mut items, |mut item| {
       if item == 2 {
           *item = 6;
       }
@@ -53,15 +55,17 @@ at the current position. You can:
 * Remove the current item.
 
   ```rust
+  use editer::edit;
+
   let mut items = vec![1, 2, 3, 4, 5];
 
-  edit(items, |item| {
+  edit(&mut items, |item| {
       if item == 3 {
           item.remove();
       }
   });
 
-  assert_eq!(items, vec![1, 6, 7, 8, 9, 4, 5]);
+  assert_eq!(items, vec![1, 2, 4, 5]);
   ```
 
 [`try_edit`] is the fallible version of `edit`. It applies the given editor function to each item
