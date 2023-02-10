@@ -4,6 +4,7 @@ use core::{
     ops::{Deref, DerefMut},
 };
 
+/// Represents the current position in a mutating iteration of a list.
 pub struct Slot<'list, 'stride, List>
 where
     List: crate::List + ?Sized,
@@ -29,24 +30,71 @@ where
         }
     }
 
+    /// Immutably borrow the item at the current position.
     pub fn get(&self) -> &List::Item {
         self.list.get(self.index)
     }
 
+    /// Mutably borrow the item at the current position.
     pub fn get_mut(&mut self) -> &mut List::Item {
         self.list.get_mut(self.index)
     }
 
+    /// Insert an item before the current item.
+    ///
+    /// ```
+    /// # use editer::edit;
+    /// #
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// edit(&mut items, |item| {
+    ///     if item == 3 {
+    ///         item.insert_before(6);
+    ///     }
+    /// });
+    ///
+    /// assert_eq!(items, vec![1, 2, 6, 3, 4, 5]);
+    /// ```
     pub fn insert_before(self, item: List::Item) {
         self.list.insert(self.index, item);
         self.stride.set(2);
     }
 
+    /// Insert an item after the current item.
+    ///
+    /// ```
+    /// # use editer::edit;
+    /// #
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// edit(&mut items, |item| {
+    ///     if item == 3 {
+    ///         item.insert_after(6);
+    ///     }
+    /// });
+    ///
+    /// assert_eq!(items, vec![1, 2, 3, 6, 4, 5]);
+    /// ```
     pub fn insert_after(self, item: List::Item) {
         self.list.insert(self.index + 1, item);
         self.stride.set(2);
     }
 
+    /// Replace the current item with zero or more `items`.
+    ///
+    /// ```
+    /// # use editer::edit;
+    /// #
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// edit(&mut items, |item| {
+    ///     if item == 3 {
+    ///         item.replace([6, 7, 8]);
+    ///     }
+    /// });
+    ///
+    /// assert_eq!(items, vec![1, 2, 6, 7, 8, 4, 5]);
+    /// ```
     pub fn replace<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
     where
         IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
@@ -54,6 +102,30 @@ where
         self.splice(items.into_iter())
     }
 
+    /// Call `build` with the current item. Replace the current item with the zero or more
+    /// resulting items.
+    ///
+    /// ```
+    /// # use editer::edit;
+    /// #
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// edit(&mut items, |item| {
+    ///     item.replace_with(|item| [
+    ///         ((item - 1) * 3) + 1,
+    ///         ((item - 1) * 3) + 2,
+    ///         ((item - 1) * 3) + 3
+    ///     ]);
+    /// });
+    ///
+    /// assert_eq!(items, vec![
+    ///      1,  2,  3,
+    ///      4,  5,  6,
+    ///      7,  8,  9,
+    ///     10, 11, 12,
+    ///     13, 14, 15
+    /// ]);
+    /// ```
     pub fn replace_with<Replacements, IntoReplacementsIter>(
         self,
         build: impl FnOnce(&List::Item) -> Replacements,
@@ -65,11 +137,26 @@ where
         self.replace(replacements);
     }
 
-    pub fn splice(self, items: impl Iterator<Item = List::Item> + ExactSizeIterator) {
+    fn splice(self, items: impl Iterator<Item = List::Item> + ExactSizeIterator) {
         self.stride.set(items.len());
         self.list.splice(self.index, items);
     }
 
+    /// Remove the current item.
+    ///
+    /// ```
+    /// # use editer::edit;
+    /// #
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// edit(&mut items, |item| {
+    ///     if item == 3 {
+    ///         item.remove();
+    ///     }
+    /// });
+    ///
+    /// assert_eq!(items, vec![1, 2, 4, 5]);
+    /// ```
     pub fn remove(self) {
         self.list.remove(self.index);
         self.stride.set(0);
