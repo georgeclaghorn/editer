@@ -92,7 +92,7 @@ mod integrations;
 
 pub fn edit<List>(items: &mut List, mut edit: impl FnMut(Slot<List>))
 where
-    List: self::List,
+    List: self::List + ?Sized,
 {
     let mut index = 0;
 
@@ -108,7 +108,7 @@ pub fn try_edit<List, Error>(
     mut edit: impl FnMut(Slot<List>) -> Result<(), Error>,
 ) -> Result<(), Error>
 where
-    List: self::List,
+    List: self::List + ?Sized,
 {
     let mut index = 0;
 
@@ -120,6 +120,21 @@ where
 
     Ok(())
 }
+
+pub trait Edit: List {
+    fn edit(&mut self, edit: impl FnMut(Slot<Self>)) {
+        crate::edit(self, edit)
+    }
+
+    fn try_edit<Error>(
+        &mut self,
+        edit: impl FnMut(Slot<Self>) -> Result<(), Error>,
+    ) -> Result<(), Error> {
+        crate::try_edit(self, edit)
+    }
+}
+
+impl<List> Edit for List where List: crate::List + ?Sized {}
 
 #[allow(clippy::len_without_is_empty)]
 pub trait List {
