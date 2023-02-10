@@ -126,6 +126,26 @@ where
     ///     13, 14, 15
     /// ]);
     /// ```
+    ///
+    /// This is useful because [`Slot::replace`] taking ownership of `self` means you can't access
+    /// the relevant slot in its argument:
+    ///
+    /// ```compile_fail
+    /// # use editer::edit;
+    /// #
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// // error: borrow of moved value: `item`
+    /// edit(&mut items, |item| {
+    ///     item.replace([
+    /// //  ---- value moved here
+    ///         ((*item - 1) * 3) + 1,
+    /// //        ^^^^^ value borrowed here after move
+    ///         ((*item - 1) * 3) + 2,
+    ///         ((*item - 1) * 3) + 3
+    ///     ]);
+    /// });
+    /// ```
     pub fn replace_with<Replacements, IntoReplacementsIter>(
         self,
         build: impl FnOnce(&List::Item) -> Replacements,
