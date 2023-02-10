@@ -90,6 +90,8 @@ use self::slot::Slot;
 
 mod integrations;
 
+/// Iterates over `items`, calling `edit` with a [`Slot`] for each item. The `Slot` allows
+/// accessing the current item and/or updating the list at the current position.
 pub fn edit<List>(items: &mut List, mut edit: impl FnMut(Slot<List>))
 where
     List: self::List + ?Sized,
@@ -103,6 +105,12 @@ where
     }
 }
 
+/// The fallible version of [`edit`].
+///
+/// Iterates over `items`, calling `edit` with a [`Slot`] for each item. The `Slot` allows
+/// accessing the current item and/or updating the list at the current position.
+///
+/// Stops at the first error and returns it.
 pub fn try_edit<List, Error>(
     items: &mut List,
     mut edit: impl FnMut(Slot<List>) -> Result<(), Error>,
@@ -121,11 +129,46 @@ where
     Ok(())
 }
 
+/// Allows calling [`edit`] and [`try_edit`] as methods on [`List`]s rather than free functions.
 pub trait Edit: List {
+    /// Calls [`edit`] on `self`.
+    ///
+    /// ```
+    /// use editer::Edit;
+    ///
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// items.edit(|item| {
+    ///     if item == 3 {
+    ///         item.remove();
+    ///     }
+    /// });
+    ///
+    /// assert_eq!(items, vec![1, 2, 4, 5]);
+    /// ```
     fn edit(&mut self, edit: impl FnMut(Slot<Self>)) {
         crate::edit(self, edit)
     }
 
+    /// Calls [`try_edit`] on `self`.
+    ///
+    /// ```
+    /// use editer::Edit;
+    ///
+    /// let mut items = vec![1, 2, 3, 4, 5];
+    ///
+    /// let result: Result<(), &str> = items.try_edit(|item| {
+    ///     if item == 4 {
+    ///         Err("Whoops!")
+    ///     } else {
+    ///         item.remove();
+    ///         Ok(())
+    ///     }
+    /// });
+    ///
+    /// assert_eq!(result, Err("Whoops!"));
+    /// assert_eq!(items, vec![4, 5]);
+    /// ```
     fn try_edit<Error>(
         &mut self,
         edit: impl FnMut(Slot<Self>) -> Result<(), Error>,
