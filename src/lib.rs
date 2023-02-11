@@ -179,16 +179,28 @@ pub trait Edit: List {
 
 impl<List> Edit for List where List: crate::List + ?Sized {}
 
+/// A homogeneous collection that can be mutated in place while iterating.
 #[allow(clippy::len_without_is_empty)]
 pub trait List {
+    /// The type of each item in the list.
     type Item;
 
+    /// Returns the number of items in the list, also referred to as its ‘length’.
     fn len(&self) -> usize;
+
+    /// Returns a shared reference to the item at `index`, panicking if `index` is out of bounds.
     fn index(&self, index: usize) -> &Self::Item;
+
+    /// Returns a mutable reference to the item at `index`, panicking if `index` is out of bounds.
     fn index_mut(&mut self, index: usize) -> &mut Self::Item;
+
+    /// Inserts `item` at `index`.
     fn insert(&mut self, index: usize, item: Self::Item);
+
+    /// Removes the item at `index`.
     fn remove(&mut self, index: usize);
 
+    /// Replaces the item at `index` with the zero or more `items`.
     fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Self::Item>) {
         if let Some(item) = items.next() {
             *self.index_mut(index) = item;
