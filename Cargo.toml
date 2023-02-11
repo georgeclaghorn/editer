@@ -1,8 +1,16 @@
 [package]
 name = "editer"
+description = "In-place, simultaneous iteration and mutation of collections"
 version = "0.1.0"
 rust-version = "1.57"
 edition = "2021"
+authors = ["George Claghorn <georgeclaghorn@gmail.com>"]
+repository = "https://github.com/georgeclaghorn/editer"
+homepage = "https://github.com/georgeclaghorn/editer"
+documentation = "https://docs.rs/editer"
+license = "MIT"
+readme = "README.md"
+categories = ["rust-patterns", "no-std"]
 
 [dependencies]
 arrayvec = { version = "0.7", optional = true, default-features = false }
