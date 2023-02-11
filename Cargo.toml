@@ -1,7 +1,7 @@
 [package]
 name = "editer"
 description = "In-place, simultaneous iteration and mutation of collections"
-version = "0.1.0"
+version = "0.1.1"
 rust-version = "1.57"
 edition = "2021"
 authors = ["George Claghorn <georgeclaghorn@gmail.com>"]
@@ -13,7 +13,8 @@ readme = "README.md"
 categories = ["rust-patterns", "no-std"]
 
 [package.metadata.docs.rs]
-all-features = true
+all-features = false
+features = ["std"]
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
