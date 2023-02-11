@@ -184,14 +184,14 @@ pub trait List {
     type Item;
 
     fn len(&self) -> usize;
-    fn get(&self, index: usize) -> &Self::Item;
-    fn get_mut(&mut self, index: usize) -> &mut Self::Item;
+    fn index(&self, index: usize) -> &Self::Item;
+    fn index_mut(&mut self, index: usize) -> &mut Self::Item;
     fn insert(&mut self, index: usize, item: Self::Item);
     fn remove(&mut self, index: usize);
 
     fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Self::Item>) {
         if let Some(item) = items.next() {
-            *self.get_mut(index) = item;
+            *self.index_mut(index) = item;
 
             for (offset, item) in items.enumerate() {
                 self.insert(index + offset + 1, item);

@@ -8,11 +8,11 @@ impl<Item, const CAP: usize> List for ArrayVec<Item, CAP> {
         ArrayVec::len(self)
     }
 
-    fn get(&self, index: usize) -> &Item {
+    fn index(&self, index: usize) -> &Item {
         &self[index]
     }
 
-    fn get_mut(&mut self, index: usize) -> &mut Item {
+    fn index_mut(&mut self, index: usize) -> &mut Item {
         &mut self[index]
     }
 

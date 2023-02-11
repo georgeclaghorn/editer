@@ -32,12 +32,12 @@ where
 
     /// Immutably borrow the item at the current position.
     pub fn get(&self) -> &List::Item {
-        self.list.get(self.index)
+        self.list.index(self.index)
     }
 
     /// Mutably borrow the item at the current position.
     pub fn get_mut(&mut self) -> &mut List::Item {
-        self.list.get_mut(self.index)
+        self.list.index_mut(self.index)
     }
 
     /// Insert an item before the current item.

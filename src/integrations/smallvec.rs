@@ -11,11 +11,11 @@ where
         SmallVec::len(self)
     }
 
-    fn get(&self, index: usize) -> &Self::Item {
+    fn index(&self, index: usize) -> &Self::Item {
         &self[index]
     }
 
-    fn get_mut(&mut self, index: usize) -> &mut Self::Item {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Item {
         &mut self[index]
     }
 
