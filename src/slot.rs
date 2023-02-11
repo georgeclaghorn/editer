@@ -30,17 +30,17 @@ where
         }
     }
 
-    /// Immutably borrow the item at the current position.
+    /// Returns a shared reference to the item at the current position.
     pub fn get(&self) -> &List::Item {
         self.list.index(self.index)
     }
 
-    /// Mutably borrow the item at the current position.
+    /// Returns a mutable reference to the item at the current position.
     pub fn get_mut(&mut self) -> &mut List::Item {
         self.list.index_mut(self.index)
     }
 
-    /// Insert an item before the current item.
+    /// Inserts an item before the current item.
     ///
     /// ```
     /// # use editer::edit;
@@ -60,7 +60,7 @@ where
         self.stride.set(2);
     }
 
-    /// Insert an item after the current item.
+    /// Inserts an item after the current item.
     ///
     /// ```
     /// # use editer::edit;
@@ -80,7 +80,7 @@ where
         self.stride.set(2);
     }
 
-    /// Replace the current item with zero or more `items`.
+    /// Replaces the current item with zero or more `items`.
     ///
     /// ```
     /// # use editer::edit;
@@ -102,7 +102,7 @@ where
         self.splice(items.into_iter())
     }
 
-    /// Call `build` with the current item. Replace the current item with the zero or more
+    /// Calls `build` with the current item. Replaces the current item with the zero or more
     /// resulting items.
     ///
     /// ```
@@ -162,7 +162,7 @@ where
         self.list.splice(self.index, items);
     }
 
-    /// Remove the current item.
+    /// Removes the current item.
     ///
     /// ```
     /// # use editer::edit;
