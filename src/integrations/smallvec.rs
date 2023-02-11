@@ -1,6 +1,7 @@
 use crate::List;
 use smallvec::SmallVec;
 
+#[cfg_attr(docsrs, doc(cfg(feature = "smallvec")))]
 impl<Item, Array> List for SmallVec<Array>
 where
     Array: smallvec::Array<Item = Item>,

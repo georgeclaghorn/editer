@@ -1,6 +1,7 @@
 use crate::List;
 use tinyvec::TinyVec;
 
+#[cfg_attr(docsrs, doc(cfg(feature = "tinyvec")))]
 impl<Item, Array> List for TinyVec<Array>
 where
     Array: tinyvec::Array<Item = Item>,

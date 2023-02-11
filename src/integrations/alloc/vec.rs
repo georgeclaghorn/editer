@@ -3,6 +3,7 @@ extern crate alloc;
 use crate::List;
 use alloc::vec::Vec;
 
+#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 impl<Item> List for Vec<Item> {
     type Item = Item;
 

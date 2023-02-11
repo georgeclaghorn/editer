@@ -1,6 +1,7 @@
 use crate::List;
 use tinyvec::ArrayVec;
 
+#[cfg_attr(docsrs, doc(cfg(feature = "tinyvec")))]
 impl<Item: Default, const N: usize> List for ArrayVec<[Item; N]> {
     type Item = Item;
 

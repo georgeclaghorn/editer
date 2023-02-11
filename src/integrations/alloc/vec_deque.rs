@@ -3,6 +3,7 @@ extern crate alloc;
 use crate::List;
 use alloc::collections::VecDeque;
 
+#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 impl<Item> List for VecDeque<Item> {
     type Item = Item;
 

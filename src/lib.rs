@@ -102,6 +102,7 @@
 //! [`tinyvec::TinyVec`]: https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html
 
 #![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 pub mod slot;
 use self::slot::Slot;
