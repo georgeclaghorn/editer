@@ -81,7 +81,25 @@
 //! assert_eq!(items, vec![4, 5]);
 //! ```
 //!
+//! ## Optional features
+//!
+//! Implementations of `List` for third-party types are provided behind optional features:
+//!
+//! * The **`alloc`** feature, which is enabled by default, implements `List` for [`Vec`] and
+//!   [`VecDeque`].
+//! * The **`arrayvec`** feature implements `List` for [`arrayvec::ArrayVec`].
+//! * The **`smallvec`** feature implements `List` for [`smallvec::SmallVec`].
+//! * The **`tinyvec`** feature implements `List` for [`tinyvec::ArrayVec`] and
+//!   [`tinyvec::TinyVec`].
+//!
+//! Editer can be used without the standard library by disabling default features.
+//!
 //! [`DerefMut::deref_mut`]: core::ops::DerefMut::deref_mut
+//! [`VecDeque`]: https://doc.rust-lang.org/alloc/collections/vec_deque/struct.VecDeque.html
+//! [`arrayvec::ArrayVec`]: https://docs.rs/arrayvec/latest/arrayvec/struct.ArrayVec.html
+//! [`smallvec::SmallVec`]: https://docs.rs/smallvec/latest/smallvec/struct.SmallVec.html
+//! [`tinyvec::ArrayVec`]: https://docs.rs/tinyvec/latest/tinyvec/struct.ArrayVec.html
+//! [`tinyvec::TinyVec`]: https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
