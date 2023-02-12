@@ -4,8 +4,8 @@
 //! given function with a [`Slot`]. The `Slot` can be used to access the current item and/or mutate
 //! the list at the current position. You can:
 //!
-//! * Insert a new item before or after the current item using [`Slot::insert_before`] or
-//!   [`Slot::insert_after`].
+//! * Insert zero or more new items before or after the current item using [`Slot::insert_before`]
+//!   or [`Slot::insert_after`].
 //!
 //!   ```
 //!   use editer::edit;
@@ -14,13 +14,13 @@
 //!
 //!   edit(&mut items, |item| {
 //!       if item == 2 {
-//!           item.insert_after(6);
+//!           item.insert_after([6, 7]);
 //!       } else if item == 3 {
-//!           item.insert_before(7);
+//!           item.insert_before([8, 9]);
 //!       }
 //!   });
 //!
-//!   assert_eq!(items, vec![1, 2, 6, 7, 3, 4, 5]);
+//!   assert_eq!(items, vec![1, 2, 6, 7, 8, 9, 3, 4, 5]);
 //!   ```
 //!
 //! * Replace the current item with zero or more new items using [`DerefMut::deref_mut`] or
@@ -213,20 +213,22 @@ pub trait List {
     /// Returns a mutable reference to the item at `index`, panicking if `index` is out of bounds.
     fn index_mut(&mut self, index: usize) -> &mut Self::Item;
 
-    /// Inserts `item` at `index`.
-    fn insert(&mut self, index: usize, item: Self::Item);
+    /// Inserts `items` at `index`.
+    fn insert(&mut self, index: usize, items: impl Iterator<Item = Self::Item> + ExactSizeIterator);
 
     /// Removes the item at `index`.
     fn remove(&mut self, index: usize);
 
     /// Replaces the item at `index` with the zero or more `items`.
-    fn replace(&mut self, index: usize, mut items: impl Iterator<Item = Self::Item>) {
+    fn replace(
+        &mut self,
+        index: usize,
+        mut items: impl Iterator<Item = Self::Item> + ExactSizeIterator,
+    ) {
         if let Some(item) = items.next() {
             *self.index_mut(index) = item;
 
-            for (offset, item) in items.enumerate() {
-                self.insert(index + offset + 1, item);
-            }
+            self.insert(index + 1, items);
         } else {
             self.remove(index);
         }

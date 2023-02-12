@@ -40,7 +40,7 @@ where
         self.list.index_mut(self.index)
     }
 
-    /// Inserts an item before the current item.
+    /// Inserts zero or more `items` before the current item.
     ///
     /// ```
     /// # use editer::edit;
@@ -49,18 +49,22 @@ where
     ///
     /// edit(&mut items, |item| {
     ///     if item == 3 {
-    ///         item.insert_before(6);
+    ///         item.insert_before([6, 7, 8]);
     ///     }
     /// });
     ///
-    /// assert_eq!(items, vec![1, 2, 6, 3, 4, 5]);
+    /// assert_eq!(items, vec![1, 2, 6, 7, 8, 3, 4, 5]);
     /// ```
-    pub fn insert_before(self, item: List::Item) {
-        self.list.insert(self.index, item);
-        self.stride.set(2);
+    pub fn insert_before<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
+    where
+        IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
+    {
+        let items = items.into_iter();
+        self.stride.set(items.len() + 1);
+        self.list.insert(self.index, items);
     }
 
-    /// Inserts an item after the current item.
+    /// Inserts zero or more `items` after the current item.
     ///
     /// ```
     /// # use editer::edit;
@@ -69,15 +73,19 @@ where
     ///
     /// edit(&mut items, |item| {
     ///     if item == 3 {
-    ///         item.insert_after(6);
+    ///         item.insert_after([6, 7, 8]);
     ///     }
     /// });
     ///
-    /// assert_eq!(items, vec![1, 2, 3, 6, 4, 5]);
+    /// assert_eq!(items, vec![1, 2, 3, 6, 7, 8, 4, 5]);
     /// ```
-    pub fn insert_after(self, item: List::Item) {
-        self.list.insert(self.index + 1, item);
-        self.stride.set(2);
+    pub fn insert_after<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
+    where
+        IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
+    {
+        let items = items.into_iter();
+        self.stride.set(items.len() + 1);
+        self.list.insert(self.index + 1, items);
     }
 
     /// Replaces the current item with zero or more `items`.

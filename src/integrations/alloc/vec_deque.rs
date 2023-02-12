@@ -19,8 +19,12 @@ impl<Item> List for VecDeque<Item> {
         &mut self[index]
     }
 
-    fn insert(&mut self, index: usize, item: Item) {
-        VecDeque::insert(self, index, item);
+    fn insert(&mut self, index: usize, items: impl Iterator<Item = Item> + ExactSizeIterator) {
+        VecDeque::reserve(self, items.len());
+
+        for (offset, item) in items.enumerate() {
+            VecDeque::insert(self, index + offset, item);
+        }
     }
 
     fn remove(&mut self, index: usize) {
@@ -190,68 +194,68 @@ mod tests {
     }
 
     #[test]
-    fn inserting_an_item_before_the_first_item() {
+    fn inserting_items_before_the_first_item() {
         let mut items = VecDeque::from([1, 2, 3, 4, 5]);
 
         edit(&mut items, |item| {
             if item == 1 {
-                item.insert_before(6);
+                item.insert_before([6, 7, 8]);
             }
         });
 
-        assert_eq!(items, VecDeque::from([6, 1, 2, 3, 4, 5]));
+        assert_eq!(items, VecDeque::from([6, 7, 8, 1, 2, 3, 4, 5]));
     }
 
     #[test]
-    fn inserting_an_item_before_an_interior_item() {
+    fn inserting_items_before_an_interior_item() {
         let mut items = VecDeque::from([1, 2, 3, 4, 5]);
 
         edit(&mut items, |item| {
             if item == 3 {
-                item.insert_before(6);
+                item.insert_before([6, 7, 8]);
             }
         });
 
-        assert_eq!(items, VecDeque::from([1, 2, 6, 3, 4, 5]));
+        assert_eq!(items, VecDeque::from([1, 2, 6, 7, 8, 3, 4, 5]));
     }
 
     #[test]
-    fn inserting_an_item_before_the_last_item() {
+    fn inserting_items_before_the_last_item() {
         let mut items = VecDeque::from([1, 2, 3, 4, 5]);
 
         edit(&mut items, |item| {
             if item == 5 {
-                item.insert_before(6);
+                item.insert_before([6, 7, 8]);
             }
         });
 
-        assert_eq!(items, VecDeque::from([1, 2, 3, 4, 6, 5]));
+        assert_eq!(items, VecDeque::from([1, 2, 3, 4, 6, 7, 8, 5]));
     }
 
     #[test]
-    fn inserting_an_item_after_the_first_item() {
+    fn inserting_items_after_the_first_item() {
         let mut items = VecDeque::from([1, 2, 3, 4, 5]);
 
         edit(&mut items, |item| {
             if item == 1 {
-                item.insert_after(6);
+                item.insert_after([6, 7, 8]);
             }
         });
 
-        assert_eq!(items, VecDeque::from([1, 6, 2, 3, 4, 5]));
+        assert_eq!(items, VecDeque::from([1, 6, 7, 8, 2, 3, 4, 5]));
     }
 
     #[test]
-    fn inserting_an_item_after_an_interior_item() {
+    fn inserting_items_after_an_interior_item() {
         let mut items = VecDeque::from([1, 2, 3, 4, 5]);
 
         edit(&mut items, |item| {
             if item == 3 {
-                item.insert_after(6);
+                item.insert_after([6, 7, 8]);
             }
         });
 
-        assert_eq!(items, VecDeque::from([1, 2, 3, 6, 4, 5]));
+        assert_eq!(items, VecDeque::from([1, 2, 3, 6, 7, 8, 4, 5]));
     }
 
     #[test]
@@ -260,10 +264,10 @@ mod tests {
 
         edit(&mut items, |item| {
             if item == 5 {
-                item.insert_after(6);
+                item.insert_after([6, 7, 8]);
             }
         });
 
-        assert_eq!(items, VecDeque::from([1, 2, 3, 4, 5, 6]));
+        assert_eq!(items, VecDeque::from([1, 2, 3, 4, 5, 6, 7, 8]));
     }
 }

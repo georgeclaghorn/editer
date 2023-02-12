@@ -14,7 +14,7 @@ The [`edit`] function iterates over a given [`List`]. For each item in the list,
 function with a [`Slot`]. The `Slot` can be used to access the current item and/or mutate the list
 at the current position. You can:
 
-* Insert a new item before or after the current item using [`Slot::insert_before`] or
+* Insert zero or more new items before or after the current item using [`Slot::insert_before`] or
   [`Slot::insert_after`].
 
   ```rust
@@ -24,13 +24,13 @@ at the current position. You can:
 
   edit(&mut items, |item| {
       if item == 2 {
-          item.insert_after(6);
+          item.insert_after([6, 7]);
       } else if item == 3 {
-          item.insert_before(7);
+          item.insert_before([8, 9]);
       }
   });
 
-  assert_eq!(items, vec![1, 2, 6, 7, 3, 4, 5]);
+  assert_eq!(items, vec![1, 2, 6, 7, 8, 9, 3, 4, 5]);
   ```
 
 * Replace the current item with zero or more new items using [`DerefMut::deref_mut`] or
