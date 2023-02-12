@@ -68,7 +68,7 @@
 //!
 //! let mut items = vec![1, 2, 3, 4, 5];
 //!
-//! let result: Result<(), &str> = try_edit(&mut items, |item| {
+//! let result = try_edit(&mut items, |item| {
 //!     if item == 4 {
 //!         Err("Whoops!")
 //!     } else {
@@ -176,7 +176,7 @@ pub trait Edit: List {
     ///
     /// let mut items = vec![1, 2, 3, 4, 5];
     ///
-    /// let result: Result<(), &str> = items.try_edit(|item| {
+    /// let result = items.try_edit(|item| {
     ///     if item == 4 {
     ///         Err("Whoops!")
     ///     } else {

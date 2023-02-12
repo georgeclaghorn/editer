@@ -74,7 +74,7 @@ use editer::try_edit;
 
 let mut items = vec![1, 2, 3, 4, 5];
 
-let result: Result<(), &str> = try_edit(&mut items, |item| {
+let result = try_edit(&mut items, |item| {
     if item == 4 {
         Err("Whoops!")
     } else {
