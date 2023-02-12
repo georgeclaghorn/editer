@@ -99,7 +99,9 @@ where
     where
         IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
     {
-        self.splice(items.into_iter())
+        let items = items.into_iter();
+        self.stride.set(items.len());
+        self.list.splice(self.index, items);
     }
 
     /// Calls `build` with the current item. Replaces the current item with the zero or more
@@ -155,11 +157,6 @@ where
     {
         let replacements = build(&self);
         self.replace(replacements);
-    }
-
-    fn splice(self, items: impl Iterator<Item = List::Item> + ExactSizeIterator) {
-        self.stride.set(items.len());
-        self.list.splice(self.index, items);
     }
 
     /// Removes the current item.
