@@ -28,7 +28,7 @@ where
         TinyVec::remove(self, index);
     }
 
-    fn splice(&mut self, index: usize, items: impl Iterator<Item = Item>) {
+    fn replace(&mut self, index: usize, items: impl Iterator<Item = Item>) {
         TinyVec::splice(self, index..index + 1, items);
     }
 }

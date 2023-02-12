@@ -220,7 +220,7 @@ pub trait List {
     fn remove(&mut self, index: usize);
 
     /// Replaces the item at `index` with the zero or more `items`.
-    fn splice(&mut self, index: usize, mut items: impl Iterator<Item = Self::Item>) {
+    fn replace(&mut self, index: usize, mut items: impl Iterator<Item = Self::Item>) {
         if let Some(item) = items.next() {
             *self.index_mut(index) = item;
 

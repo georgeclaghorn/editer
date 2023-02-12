@@ -27,7 +27,7 @@ impl<Item> List for Vec<Item> {
         Vec::remove(self, index);
     }
 
-    fn splice(&mut self, index: usize, items: impl Iterator<Item = Item>) {
+    fn replace(&mut self, index: usize, items: impl Iterator<Item = Item>) {
         Vec::splice(self, index..index + 1, items);
     }
 }

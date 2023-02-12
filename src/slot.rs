@@ -101,7 +101,7 @@ where
     {
         let items = items.into_iter();
         self.stride.set(items.len());
-        self.list.splice(self.index, items);
+        self.list.replace(self.index, items);
     }
 
     /// Calls `build` with the current item. Replaces the current item with the zero or more
