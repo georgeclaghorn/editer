@@ -2,9 +2,15 @@ name: CI
 on: push
 jobs:
   tests:
-    name: Tests
+    name: Tests (Rust ${{ matrix.rust-toolchain }})
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    strategy:
+      matrix:
+        rust-toolchain:
+          - "1.57"
+          - stable
 
     steps:
       - name: Check out code
@@ -13,7 +19,7 @@ jobs:
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: ${{ matrix.rust-toolchain }}
           override: true
 
       - uses: Swatinem/rust-cache@v1
