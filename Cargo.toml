@@ -1,7 +1,7 @@
 [package]
 name = "editer"
 description = "In-place, simultaneous iteration and mutation of collections"
-version = "0.1.1"
+version = "0.2.0"
 rust-version = "1.57"
 edition = "2021"
 authors = ["George Claghorn <georgeclaghorn@gmail.com>"]
