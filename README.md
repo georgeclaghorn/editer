@@ -87,6 +87,26 @@ assert_eq!(result, Err("Whoops!"));
 assert_eq!(items, vec![4, 5]);
 ```
 
+### Optional features
+
+Implementations of `List` for third-party types are provided behind optional features:
+
+* The **`alloc`** feature, which is enabled by default, implements `List` for [`Vec`] and
+[`VecDeque`].
+* The **`arrayvec`** feature implements `List` for [`arrayvec::ArrayVec`].
+* The **`smallvec`** feature implements `List` for [`smallvec::SmallVec`].
+* The **`tinyvec`** feature implements `List` for [`tinyvec::ArrayVec`] and [`tinyvec::TinyVec`].
+
+Editer can be used without the standard library by disabling default features.
+
+## Requirements
+
+Editer requires Rust 1.57 or newer.
+
+## License
+
+Editer is distributed under the terms of the MIT License. See `LICENSE` for details.
+
 [`edit`]: https://docs.rs/editer/latest/editer/fn.edit.html
 [`try_edit`]: https://docs.rs/editer/latest/editer/fn.try_edit.html
 [`List`]: https://docs.rs/editer/latest/editer/trait.List.html
@@ -96,11 +116,9 @@ assert_eq!(items, vec![4, 5]);
 [`Slot::replace`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html#method.replace
 [`Slot::remove`]: https://docs.rs/editer/latest/editer/slot/struct.Slot.html#method.remove
 [`DerefMut::deref_mut`]: https://doc.rust-lang.org/core/ops/trait.DerefMut.html#tymethod.deref_mut
-
-## Requirements
-
-Editer requires Rust 1.57 or newer.
-
-## License
-
-Editer is distributed under the terms of the MIT License. See `LICENSE` for details.
+[`Vec`]: https://doc.rust-lang.org/alloc/vec/struct.Vec.html
+[`VecDeque`]: https://doc.rust-lang.org/alloc/collections/vec_deque/struct.VecDeque.html
+[`arrayvec::ArrayVec`]: https://docs.rs/arrayvec/latest/arrayvec/struct.ArrayVec.html
+[`smallvec::SmallVec`]: https://docs.rs/smallvec/latest/smallvec/struct.SmallVec.html
+[`tinyvec::ArrayVec`]: https://docs.rs/tinyvec/latest/tinyvec/struct.ArrayVec.html
+[`tinyvec::TinyVec`]: https://docs.rs/tinyvec/latest/tinyvec/enum.TinyVec.html
