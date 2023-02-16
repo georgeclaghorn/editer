@@ -111,6 +111,20 @@ mod integrations;
 
 /// Iterates over `items`, calling `edit` with a [`Slot`] for each item. The `Slot` allows
 /// accessing the current item and/or updating the list at the current position.
+///
+/// ```
+/// use editer::edit;
+///
+/// let mut items = vec![1, 2, 3, 4, 5];
+///
+/// edit(&mut items, |item| {
+///     if item == 3 {
+///         item.remove();
+///     }
+/// });
+///
+/// assert_eq!(items, vec![1, 2, 4, 5]);
+/// ```
 pub fn edit<List>(items: &mut List, mut edit: impl FnMut(Slot<List>))
 where
     List: self::List + ?Sized,
@@ -130,6 +144,24 @@ where
 /// accessing the current item and/or updating the list at the current position.
 ///
 /// Stops at the first error and returns it.
+///
+/// ```
+/// use editer::try_edit;
+///
+/// let mut items = vec![1, 2, 3, 4, 5];
+///
+/// let result = try_edit(&mut items, |item| {
+///     if item == 4 {
+///         Err("Whoops!")
+///     } else {
+///         item.remove();
+///         Ok(())
+///     }
+/// });
+///
+/// assert_eq!(result, Err("Whoops!"));
+/// assert_eq!(items, vec![4, 5]);
+/// ```
 pub fn try_edit<List, Error>(
     items: &mut List,
     mut edit: impl FnMut(Slot<List>) -> Result<(), Error>,
