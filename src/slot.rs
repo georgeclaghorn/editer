@@ -115,8 +115,8 @@ where
         self.list.replace(self.index, items);
     }
 
-    /// Calls `build` with the current item. Replaces the current item with the zero or more
-    /// resulting items.
+    /// Calls `build` with a shared reference to the current item. Replaces the current item with
+    /// the zero or more items returned by `build`.
     ///
     /// ```
     /// # use editer::edit;
