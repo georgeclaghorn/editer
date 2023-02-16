@@ -55,9 +55,10 @@ where
     ///
     /// assert_eq!(items, vec![1, 2, 6, 7, 8, 3, 4, 5]);
     /// ```
-    pub fn insert_before<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
+    pub fn insert_before<Items>(self, items: Items)
     where
-        IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
+        Items: IntoIterator,
+        Items::IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
     {
         let items = items.into_iter();
         self.stride.set(items.len() + 1);
@@ -79,9 +80,10 @@ where
     ///
     /// assert_eq!(items, vec![1, 2, 3, 6, 7, 8, 4, 5]);
     /// ```
-    pub fn insert_after<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
+    pub fn insert_after<Items>(self, items: Items)
     where
-        IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
+        Items: IntoIterator,
+        Items::IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
     {
         let items = items.into_iter();
         self.stride.set(items.len() + 1);
@@ -103,9 +105,10 @@ where
     ///
     /// assert_eq!(items, vec![1, 2, 6, 7, 8, 4, 5]);
     /// ```
-    pub fn replace<IntoIter>(self, items: impl IntoIterator<IntoIter = IntoIter>)
+    pub fn replace<Items>(self, items: Items)
     where
-        IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
+        Items: IntoIterator,
+        Items::IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
     {
         let items = items.into_iter();
         self.stride.set(items.len());
@@ -156,15 +159,13 @@ where
     ///     ]);
     /// });
     /// ```
-    pub fn replace_with<Replacements, IntoReplacementsIter>(
-        self,
-        build: impl FnOnce(&List::Item) -> Replacements,
-    ) where
-        Replacements: IntoIterator<IntoIter = IntoReplacementsIter>,
-        IntoReplacementsIter: Iterator<Item = List::Item> + ExactSizeIterator,
+    pub fn replace_with<Items>(self, build: impl FnOnce(&List::Item) -> Items)
+    where
+        Items: IntoIterator,
+        Items::IntoIter: Iterator<Item = List::Item> + ExactSizeIterator,
     {
-        let replacements = build(&self);
-        self.replace(replacements);
+        let items = build(&self);
+        self.replace(items);
     }
 
     /// Removes the current item.
