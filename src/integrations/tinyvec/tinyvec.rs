@@ -2,9 +2,9 @@ use crate::List;
 use tinyvec::TinyVec;
 
 #[cfg_attr(docsrs, doc(cfg(feature = "tinyvec")))]
-impl<Item, Array> List for TinyVec<Array>
+impl<Array> List for TinyVec<Array>
 where
-    Array: tinyvec::Array<Item = Item>,
+    Array: tinyvec::Array,
 {
     type Item = Array::Item;
 
@@ -12,15 +12,19 @@ where
         TinyVec::len(self)
     }
 
-    fn index(&self, index: usize) -> &Item {
+    fn index(&self, index: usize) -> &Self::Item {
         &self[index]
     }
 
-    fn index_mut(&mut self, index: usize) -> &mut Item {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Item {
         &mut self[index]
     }
 
-    fn insert(&mut self, index: usize, items: impl Iterator<Item = Item> + ExactSizeIterator) {
+    fn insert(
+        &mut self,
+        index: usize,
+        items: impl Iterator<Item = Self::Item> + ExactSizeIterator,
+    ) {
         TinyVec::splice(self, index..index, items);
     }
 
@@ -28,7 +32,7 @@ where
         TinyVec::remove(self, index);
     }
 
-    fn replace(&mut self, index: usize, items: impl Iterator<Item = Item>) {
+    fn replace(&mut self, index: usize, items: impl Iterator<Item = Self::Item>) {
         TinyVec::splice(self, index..index + 1, items);
     }
 }
